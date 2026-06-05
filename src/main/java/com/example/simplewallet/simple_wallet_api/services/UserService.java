@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.simplewallet.simple_wallet_api.entities.User;
 import com.example.simplewallet.simple_wallet_api.entities.Wallet;
+import com.example.simplewallet.simple_wallet_api.enums.Roles;
+import com.example.simplewallet.simple_wallet_api.exceptions.DomainException;
 import com.example.simplewallet.simple_wallet_api.repositories.UserRepository;
 
 @Service
@@ -28,8 +30,13 @@ public class UserService {
 	}
 
 	public User findById(Long id) {
-		// exception aq no futuro pra caso não ache o user
+
 		Optional<User> obj = repository.findById(id);
+
+		if (obj.isEmpty()) {
+			throw new DomainException("User not found");
+		}
+
 		return obj.get();
 	}
 
@@ -39,11 +46,15 @@ public class UserService {
 		walletService.saveWallet(newWallet);
 	}
 
-	public void changeAccountStatus(User admin, User user, Boolean lockedOrNot) {
-		// exception aqui pra caso admin seja invalido
+	public void changeAccountStatus(User admin, Long userId, Boolean lockedOrNot) {
+
 		User adminUser = findById(admin.getId());
 
-		User userToChange = findById(user.getId());
+		if (adminUser.getRole() != Roles.ADMIN) {
+			throw new DomainException("Only admins can block or unlock accounts");
+		}
+
+		User userToChange = findById(userId);
 
 		userToChange.setLockedAccount(lockedOrNot);
 

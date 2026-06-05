@@ -46,4 +46,12 @@ public class Wallet {
 		return balance;
 	}
 
+	public void addBalance(BigDecimal value) {
+		balance = balance.add(value);
+	}
+
+	public void subtractBalance(BigDecimal value) {
+		balance = balance.subtract(value);
+	}
+
 }

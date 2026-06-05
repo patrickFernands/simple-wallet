@@ -1,7 +1,7 @@
 package com.example.simplewallet.simple_wallet_api.entities;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -35,16 +35,16 @@ public class Transaction {
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
 	@Column(nullable = false)
-	private LocalDateTime timeStamp;
+	private Instant moment;
 
 	public Transaction() {
 	}
 
-	public Transaction(User payer, User payee, BigDecimal amount, LocalDateTime timeStamp) {
+	public Transaction(User payer, User payee, BigDecimal amount, Instant moment) {
 		this.payer = payer;
 		this.payee = payee;
 		this.amount = amount;
-		this.timeStamp = timeStamp;
+		this.moment = moment;
 	}
 
 	public Long getId() {
@@ -63,8 +63,8 @@ public class Transaction {
 		return amount;
 	}
 
-	public LocalDateTime getTimeStamp() {
-		return timeStamp;
+	public Instant getMoment() {
+		return moment;
 	}
 
 }

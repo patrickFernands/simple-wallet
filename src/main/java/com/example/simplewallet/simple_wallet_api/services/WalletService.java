@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.simplewallet.simple_wallet_api.entities.Wallet;
+import com.example.simplewallet.simple_wallet_api.exceptions.DomainException;
 import com.example.simplewallet.simple_wallet_api.repositories.WalletRepository;
 
 @Service
@@ -21,8 +22,13 @@ public class WalletService {
 	}
 
 	public Wallet findById(Long id) {
-		// exception aqui no futuro pra caso não ache user
+
 		Optional<Wallet> obj = repository.findById(id);
+
+		if (obj.isEmpty()) {
+			throw new DomainException("Wallet not found!");
+		}
+
 		return obj.get();
 	}
 
