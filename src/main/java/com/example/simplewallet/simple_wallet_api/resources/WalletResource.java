@@ -1,5 +1,6 @@
 package com.example.simplewallet.simple_wallet_api.resources;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,12 @@ public class WalletResource {
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Wallet> findById(@PathVariable Long id) {
 		Wallet obj = service.findById(id);
+		return ResponseEntity.ok().body(obj);
+	}
+
+	@GetMapping(value = "/{id}/balance")
+	public ResponseEntity<BigDecimal> getBalance(@PathVariable Long id) {
+		BigDecimal obj = service.getBalance(id);
 		return ResponseEntity.ok().body(obj);
 	}
 

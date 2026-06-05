@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.simplewallet.simple_wallet_api.enums.Roles;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -49,13 +50,16 @@ public class User implements Serializable {
 	private Boolean lockedAccount;
 
 	// pagt feitos
+	@JsonIgnore
 	@OneToMany(mappedBy = "payer")
 	private List<Transaction> paymentsMade = new ArrayList<>();
 
 	// pagt recebido
+	@JsonIgnore
 	@OneToMany(mappedBy = "payee")
 	private List<Transaction> paymentsReceived = new ArrayList<>();
 
+	@JsonIgnore
 	@OneToOne(mappedBy = "user")
 	private Wallet wallet;
 
@@ -117,6 +121,22 @@ public class User implements Serializable {
 
 	public List<Transaction> getPaymentsReceived() {
 		return paymentsReceived;
+	}
+
+	public void setWallet(Wallet wallet) {
+		this.wallet = wallet;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public Roles getRole() {
+		return role;
+	}
+
+	public Wallet getWallet() {
+		return wallet;
 	}
 
 }

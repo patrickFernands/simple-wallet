@@ -1,5 +1,6 @@
 package com.example.simplewallet.simple_wallet_api.services;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,8 +21,17 @@ public class WalletService {
 	}
 
 	public Wallet findById(Long id) {
+		// exception aqui no futuro pra caso não ache user
 		Optional<Wallet> obj = repository.findById(id);
 		return obj.get();
+	}
+
+	public BigDecimal getBalance(Long id) {
+		return findById(id).getBalance();
+	}
+
+	public void saveWallet(Wallet wallet) {
+		repository.save(wallet);
 	}
 
 }
