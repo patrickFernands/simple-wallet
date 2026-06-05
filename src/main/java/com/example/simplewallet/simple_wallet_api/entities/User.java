@@ -1,6 +1,8 @@
 package com.example.simplewallet.simple_wallet_api.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.example.simplewallet.simple_wallet_api.enums.Roles;
 
@@ -11,6 +13,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 
@@ -43,6 +47,20 @@ public class User implements Serializable {
 
 	@Column(nullable = false)
 	private Boolean lockedAccount;
+
+	// pagt feitos
+	@OneToMany(mappedBy = "payer")
+	private List<Transaction> paymentsMade = new ArrayList<>();
+
+	// pagt recebido
+	@OneToMany(mappedBy = "payee")
+	private List<Transaction> paymentsReceived = new ArrayList<>();
+
+	@OneToOne(mappedBy = "user")
+	private Wallet wallet;
+
+	public User() {
+	}
 
 	public User(String name, @Email String email, String password, Roles role) {
 		this.name = name;
@@ -91,6 +109,14 @@ public class User implements Serializable {
 
 	public void addFailedLogin() {
 		failedLoginAttempts++;
+	}
+
+	public List<Transaction> getPaymentsMade() {
+		return paymentsMade;
+	}
+
+	public List<Transaction> getPaymentsReceived() {
+		return paymentsReceived;
 	}
 
 }
