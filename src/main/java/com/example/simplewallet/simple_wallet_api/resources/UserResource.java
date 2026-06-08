@@ -4,9 +4,7 @@ import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,9 +26,6 @@ public class UserResource {
 	@Autowired
 	private UserService service;
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-
 	@GetMapping
 	public ResponseEntity<List<User>> findAll() {
 		List<User> list = service.findAll();
@@ -46,9 +41,9 @@ public class UserResource {
 	@PostMapping(value = "/register")
 	public ResponseEntity<User> register(@RequestBody UserRegisterDTO obj) {
 
-		String senhaCriptografada = passwordEncoder.encode(obj.password());
+		String senha = obj.password();
 
-		User userEntity = new User(obj.name(), obj.email(), senhaCriptografada, obj.role());
+		User userEntity = new User(obj.name(), obj.email(), senha, obj.role());
 
 		User newUser = service.register(userEntity);
 
