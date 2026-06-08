@@ -36,9 +36,9 @@ public class TransactionResource {
 	}
 
 	@PostMapping(value = "/transfer")
-    public ResponseEntity<String> transfer(@RequestBody TransferDTO dto) {
+	public ResponseEntity<String> transfer(@RequestBody TransferDTO dto) {
 
-        service.transfer(dto.payerId(), dto.payeeId(), dto.amount());
+		service.transfer(dto.payerId(), dto.payeeId(), dto.amount());
 
 		return ResponseEntity.status(HttpStatus.CREATED).body("Transferência realizada com sucesso!");
 	}

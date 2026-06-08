@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.simplewallet.simple_wallet_api.dtos.ChangeStatusDTO;
+import com.example.simplewallet.simple_wallet_api.dtos.UserRegisterDTO;
 import com.example.simplewallet.simple_wallet_api.entities.User;
 import com.example.simplewallet.simple_wallet_api.services.UserService;
 
@@ -25,6 +27,9 @@ public class UserResource {
 
 	@Autowired
 	private UserService service;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@GetMapping
 	public ResponseEntity<List<User>> findAll() {
@@ -39,23 +44,26 @@ public class UserResource {
 	}
 
 	@PostMapping(value = "/register")
-	public ResponseEntity<User> register(@RequestBody User obj) {
-   
-    User newUser = service.register(obj);
+	public ResponseEntity<User> register(@RequestBody UserRegisterDTO obj) {
 
-	URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newUser.getId()).toUri();
+		String senhaCriptografada = passwordEncoder.encode(obj.password());
 
-    return ResponseEntity.created(uri).body(newUser);
+		User userEntity = new User(obj.name(), obj.email(), senhaCriptografada, obj.role());
+
+		User newUser = service.register(userEntity);
+
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newUser.getId()).toUri();
+
+		return ResponseEntity.created(uri).body(newUser);
 
 	}
 
 	@PutMapping(value = "/{id}/status")
 	public ResponseEntity<User> changeStatus(@PathVariable Long id, @RequestBody ChangeStatusDTO dto) {
 
-    
-    User changedUser = service.changeAccountStatus(dto.adminId(), id, dto.locked());
+		User changedUser = service.changeAccountStatus(dto.adminId(), id, dto.locked());
 
-    return ResponseEntity.ok().body(changedUser);
-}
+		return ResponseEntity.ok().body(changedUser);
+	}
 
 }
