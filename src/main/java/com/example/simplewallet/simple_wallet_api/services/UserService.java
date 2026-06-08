@@ -40,25 +40,27 @@ public class UserService {
 		return obj.get();
 	}
 
-	public void register(User user) {
-		repository.save(user);
-		Wallet newWallet = new Wallet(user, new BigDecimal("0.00"));
+	public User register(User user) {
+		User savedUser = repository.save(user);
+		Wallet newWallet = new Wallet(savedUser, new BigDecimal("0.00"));
 		walletService.saveWallet(newWallet);
+		return savedUser;
 	}
 
-	public void changeAccountStatus(User admin, Long userId, Boolean lockedOrNot) {
+	public User changeAccountStatus(Long adminId, Long userId, Boolean lockedOrNot) {
 
-		User adminUser = findById(admin.getId());
+		User adminUser = findById(adminId);
 
 		if (adminUser.getRole() != Roles.ADMIN) {
 			throw new DomainException("Only admins can block or unlock accounts");
 		}
 
 		User userToChange = findById(userId);
-
 		userToChange.setLockedAccount(lockedOrNot);
 
 		repository.save(userToChange);
-	}
+
+		return userToChange;
+}
 
 }
