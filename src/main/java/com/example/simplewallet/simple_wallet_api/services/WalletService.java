@@ -11,6 +11,8 @@ import com.example.simplewallet.simple_wallet_api.entities.Wallet;
 import com.example.simplewallet.simple_wallet_api.exceptions.DomainException;
 import com.example.simplewallet.simple_wallet_api.repositories.WalletRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class WalletService {
 
@@ -33,11 +35,42 @@ public class WalletService {
 	}
 
 	public BigDecimal getBalance(Long id) {
-		return findById(id).getBalance();
+
+		Optional<Wallet> userWallet = repository.findByUserId(id);
+
+		if (userWallet.isEmpty()) {
+			throw new DomainException("Wallet not found!");
+		}
+
+		return userWallet.get().getBalance();
 	}
 
 	public void saveWallet(Wallet wallet) {
 		repository.save(wallet);
+	}
+
+	@Transactional
+	public void deposit(Long id, BigDecimal amount){
+		Optional<Wallet> userWallet = repository.findByUserId(id);
+
+		if (userWallet.isEmpty()) {
+			throw new DomainException("Wallet not found!");
+		}
+
+		userWallet.get().addBalance(amount);
+		saveWallet(userWallet.get());
+	}
+
+	@Transactional
+	public void withdraw(Long id, BigDecimal amount){
+		Optional<Wallet> userWallet = repository.findByUserId(id);
+
+		if (userWallet.isEmpty()) {
+			throw new DomainException("Wallet not found!");
+		}
+
+		userWallet.get().subtractBalance(amount);
+		saveWallet(userWallet.get());
 	}
 
 }

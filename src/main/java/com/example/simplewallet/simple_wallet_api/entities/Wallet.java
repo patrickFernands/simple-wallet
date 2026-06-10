@@ -2,6 +2,8 @@ package com.example.simplewallet.simple_wallet_api.entities;
 
 import java.math.BigDecimal;
 
+import com.example.simplewallet.simple_wallet_api.exceptions.DomainException;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,17 +31,17 @@ public class Wallet {
 	public Wallet() {
 	}
 
-	public Wallet(User user, BigDecimal balance) {
+	public Wallet(User user) {
 		this.user = user;
-		this.balance = balance;
+		this.balance = BigDecimal.ZERO;
 	}
 
 	public Long getId() {
 		return id;
 	}
 
-	public User getUser() {
-		return user;
+	public Long getUser() {
+		return user.getId();
 	}
 
 	public BigDecimal getBalance() {
@@ -47,10 +49,16 @@ public class Wallet {
 	}
 
 	public void addBalance(BigDecimal value) {
+		if(value.compareTo(new BigDecimal("0.01")) < 0){
+			throw new DomainException("Invalid amount");
+		}
 		balance = balance.add(value);
 	}
 
 	public void subtractBalance(BigDecimal value) {
+		if(value.compareTo(new BigDecimal("0.01")) < 0){
+			throw new DomainException("Invalid amount");
+		}
 		balance = balance.subtract(value);
 	}
 

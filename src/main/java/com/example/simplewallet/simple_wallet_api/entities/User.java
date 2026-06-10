@@ -2,6 +2,8 @@ package com.example.simplewallet.simple_wallet_api.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import com.example.simplewallet.simple_wallet_api.enums.Roles;
@@ -79,20 +81,12 @@ public class User implements Serializable {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public String getEmail() {
 		return email;
 	}
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public String getPassword() {
-		return password;
 	}
 
 	public void setPassword(String password) {
@@ -103,8 +97,12 @@ public class User implements Serializable {
 		return lockedAccount;
 	}
 
-	public void setLockedAccount(Boolean lockedAccount) {
-		this.lockedAccount = lockedAccount;
+	public void lockAccount() {
+		this.lockedAccount = true;
+	}
+
+	public void unlockAccount() {
+		this.lockedAccount = false;
 	}
 
 	public Integer getFailedLoginAttempts() {
@@ -116,11 +114,11 @@ public class User implements Serializable {
 	}
 
 	public List<Transaction> getPaymentsMade() {
-		return paymentsMade;
+		return Collections.unmodifiableList(paymentsMade);
 	}
 
 	public List<Transaction> getPaymentsReceived() {
-		return paymentsReceived;
+		return Collections.unmodifiableList(paymentsReceived);
 	}
 
 	public void setWallet(Wallet wallet) {
@@ -135,8 +133,8 @@ public class User implements Serializable {
 		return role;
 	}
 
-	public Wallet getWallet() {
-		return wallet;
+	public Long getWallet() {
+		return wallet.getId();
 	}
 
 }
