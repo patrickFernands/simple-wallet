@@ -40,8 +40,8 @@ public class Wallet {
 		return id;
 	}
 
-	public Long getUser() {
-		return user.getId();
+	public User getUser() {
+		return user;
 	}
 
 	public BigDecimal getBalance() {
@@ -49,14 +49,14 @@ public class Wallet {
 	}
 
 	public void addBalance(BigDecimal value) {
-		if(value.compareTo(new BigDecimal("0.01")) < 0){
+		if (value.compareTo(new BigDecimal("0.01")) < 0) {
 			throw new DomainException("Invalid amount");
 		}
 		balance = balance.add(value);
 	}
 
 	public void subtractBalance(BigDecimal value) {
-		if(value.compareTo(new BigDecimal("0.01")) < 0){
+		if (value.compareTo(new BigDecimal("0.01")) < 0) {
 			throw new DomainException("Invalid amount");
 		}
 		balance = balance.subtract(value);

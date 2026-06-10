@@ -56,9 +56,9 @@ public class TransactionService {
 			throw new DomainException("Legal Person accounts can't transfer");
 		}
 
-		Wallet payerWallet = walletService.findById(payer.getWallet());
-		Wallet payeeWallet = walletService.findById(payee.getWallet());
-		
+		Wallet payerWallet = payer.getWallet();
+		Wallet payeeWallet = payee.getWallet();
+
 		if (payerWallet.getBalance().compareTo(amount) < 0) {
 			throw new DomainException("Account without balance");
 		}

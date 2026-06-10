@@ -51,12 +51,12 @@ public class Transaction {
 		return id;
 	}
 
-	public String getPayer() {
-		return payer.getName();
+	public User getPayer() {
+		return payer;
 	}
 
-	public String getPayee() {
-		return payee.getName();
+	public User getPayee() {
+		return payee;
 	}
 
 	public BigDecimal getAmount() {

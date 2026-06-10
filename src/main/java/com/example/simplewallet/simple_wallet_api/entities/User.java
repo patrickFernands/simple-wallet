@@ -2,7 +2,6 @@ package com.example.simplewallet.simple_wallet_api.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -133,8 +132,8 @@ public class User implements Serializable {
 		return role;
 	}
 
-	public Long getWallet() {
-		return wallet.getId();
+	public Wallet getWallet() {
+		return wallet;
 	}
 
 }
