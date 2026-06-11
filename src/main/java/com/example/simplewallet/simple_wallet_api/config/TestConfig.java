@@ -52,8 +52,6 @@ public class TestConfig implements CommandLineRunner {
 
 		walletService.withdraw(user1.getId(), new BigDecimal(50));
 
-		userService.lockAccount(adm.getId(), user2.getId());
-
 		transactionService.transfer(user1.getId(), user2.getId(), new BigDecimal(9));
 
 		System.out.println(walletService.getBalance(user1.getId()));

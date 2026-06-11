@@ -43,7 +43,7 @@ public class TransactionService {
 	}
 
 	@Transactional
-	public void transfer(Long payerId, Long payeeId, BigDecimal amount) {
+	public Transaction transfer(Long payerId, Long payeeId, BigDecimal amount) {
 		User payer = userService.findById(payerId);
 		User payee = userService.findById(payeeId);
 
@@ -71,6 +71,7 @@ public class TransactionService {
 		walletService.saveWallet(payerWallet);
 		walletService.saveWallet(payeeWallet);
 
+		return transaction;
 	}
 
 }
