@@ -56,9 +56,15 @@ public class Wallet {
 	}
 
 	public void subtractBalance(BigDecimal value) {
+
 		if (value.compareTo(new BigDecimal("0.01")) < 0) {
 			throw new DomainException("Invalid amount");
 		}
+
+		if (value.compareTo(balance) > 0) {
+			throw new DomainException("Insufficient funds");
+		}
+
 		balance = balance.subtract(value);
 	}
 

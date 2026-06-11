@@ -3,7 +3,6 @@ package com.example.simplewallet.simple_wallet_api.services;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,13 +37,9 @@ public class TransactionService {
 
 	public Transaction findById(Long id) {
 
-		Optional<Transaction> obj = repository.findById(id);
+		Transaction obj = repository.findById(id).orElseThrow(() -> new DomainException("Transaction not found!"));
 
-		if (obj.isEmpty()) {
-			throw new DomainException("Transaction not found!");
-		}
-
-		return obj.get();
+		return obj;
 	}
 
 	@Transactional
@@ -52,16 +47,20 @@ public class TransactionService {
 		User payer = userService.findById(payerId);
 		User payee = userService.findById(payeeId);
 
+		if (payer.getIsLocked()) {
+			throw new DomainException("Locked accounts can't transfer");
+		}
+
+		if (payee.getIsLocked()) {
+			throw new DomainException("Locked accounts can't receive");
+		}
+
 		if (payer.getRole() == Roles.SELLER) {
 			throw new DomainException("Legal Person accounts can't transfer");
 		}
 
 		Wallet payerWallet = payer.getWallet();
 		Wallet payeeWallet = payee.getWallet();
-
-		if (payerWallet.getBalance().compareTo(amount) < 0) {
-			throw new DomainException("Account without balance");
-		}
 
 		payerWallet.subtractBalance(amount);
 		payeeWallet.addBalance(amount);

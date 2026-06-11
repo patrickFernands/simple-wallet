@@ -1,5 +1,7 @@
 package com.example.simplewallet.simple_wallet_api.config;
 
+import java.math.BigDecimal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -36,10 +38,25 @@ public class TestConfig implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		userService.register(new User("Joao", "jose@gmail.com", "1234", Roles.USER));
-		userService.register(new User("Cuca", "cuca@gmail.com", "4567", Roles.USER));
-		userService.register(new User("Maju", "maju@gmail.com", "0001", Roles.ADMIN));
-		userService.register(new User("Faria", "faria@gmail.com", "9000", Roles.SELLER));
+		User user1 = new User("João", "jose@gmail.com", "1234", Roles.USER);
+		User user2 = new User("Cuca", "cuca@gmail.com", "4567", Roles.USER);
+		User adm = new User("Maju", "maju@gmail.com", "0001", Roles.ADMIN);
+		User seller = new User("Faria", "faria@gmail.com", "9000", Roles.SELLER);
+
+		userService.register(user1);
+		userService.register(user2);
+		userService.register(adm);
+		userService.register(seller);
+
+		walletService.deposit(user1.getId(), new BigDecimal(100));
+
+		walletService.withdraw(user1.getId(), new BigDecimal(50));
+
+		userService.lockAccount(adm.getId(), user2.getId());
+
+		transactionService.transfer(user1.getId(), user2.getId(), new BigDecimal(9));
+
+		System.out.println(walletService.getBalance(user1.getId()));
 
 	}
 

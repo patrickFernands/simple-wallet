@@ -48,7 +48,7 @@ public class User implements Serializable {
 	private Integer failedLoginAttempts;
 
 	@Column(nullable = false)
-	private Boolean lockedAccount;
+	private Boolean isLocked;
 
 	// pagt feitos
 	@JsonIgnore
@@ -72,7 +72,7 @@ public class User implements Serializable {
 		this.email = email;
 		this.password = password;
 		this.role = role;
-		lockedAccount = false;
+		isLocked = false;
 		failedLoginAttempts = 0;
 	}
 
@@ -92,16 +92,16 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
-	public Boolean getLockedAccount() {
-		return lockedAccount;
+	public Boolean getIsLocked() {
+		return isLocked;
 	}
 
 	public void lockAccount() {
-		this.lockedAccount = true;
+		isLocked = true;
 	}
 
 	public void unlockAccount() {
-		this.lockedAccount = false;
+		isLocked = false;
 	}
 
 	public Integer getFailedLoginAttempts() {

@@ -2,11 +2,11 @@ package com.example.simplewallet.simple_wallet_api.services;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.simplewallet.simple_wallet_api.entities.User;
 import com.example.simplewallet.simple_wallet_api.entities.Wallet;
 import com.example.simplewallet.simple_wallet_api.exceptions.DomainException;
 import com.example.simplewallet.simple_wallet_api.repositories.WalletRepository;
@@ -25,24 +25,16 @@ public class WalletService {
 
 	public Wallet findById(Long id) {
 
-		Optional<Wallet> obj = repository.findById(id);
+		Wallet obj = repository.findById(id).orElseThrow(() -> new DomainException("Wallet not found!"));
 
-		if (obj.isEmpty()) {
-			throw new DomainException("Wallet not found!");
-		}
-
-		return obj.get();
+		return obj;
 	}
 
 	public BigDecimal getBalance(Long id) {
 
-		Optional<Wallet> userWallet = repository.findByUserId(id);
+		Wallet userWallet = repository.findByUserId(id).orElseThrow(() -> new DomainException("Wallet not found!"));
 
-		if (userWallet.isEmpty()) {
-			throw new DomainException("Wallet not found!");
-		}
-
-		return userWallet.get().getBalance();
+		return userWallet.getBalance();
 	}
 
 	public void saveWallet(Wallet wallet) {
@@ -50,27 +42,32 @@ public class WalletService {
 	}
 
 	@Transactional
-	public void deposit(Long id, BigDecimal amount){
-		Optional<Wallet> userWallet = repository.findByUserId(id);
+	public void deposit(Long id, BigDecimal amount) {
 
-		if (userWallet.isEmpty()) {
-			throw new DomainException("Wallet not found!");
+		Wallet wallet = repository.findByUserId(id).orElseThrow(() -> new DomainException("Wallet not found!"));
+
+		User owner = wallet.getUser();
+
+		if (owner.getIsLocked()) {
+			throw new DomainException("Locked accounts can't receive deposits");
 		}
 
-		userWallet.get().addBalance(amount);
-		saveWallet(userWallet.get());
+		wallet.addBalance(amount);
+		saveWallet(wallet);
 	}
 
 	@Transactional
-	public void withdraw(Long id, BigDecimal amount){
-		Optional<Wallet> userWallet = repository.findByUserId(id);
+	public void withdraw(Long id, BigDecimal amount) {
+		Wallet wallet = repository.findByUserId(id).orElseThrow(() -> new DomainException("Wallet not found!"));
 
-		if (userWallet.isEmpty()) {
-			throw new DomainException("Wallet not found!");
+		User owner = wallet.getUser();
+
+		if (owner.getIsLocked()) {
+			throw new DomainException("Locked accounts can't do withdrawals");
 		}
 
-		userWallet.get().subtractBalance(amount);
-		saveWallet(userWallet.get());
+		wallet.subtractBalance(amount);
+		saveWallet(wallet);
 	}
 
 }
