@@ -4,8 +4,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-import javax.management.RuntimeErrorException;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +19,8 @@ public class TokenService {
 	@Value("${api.security.token.secret}")
 	private String secret;
 
+	// Gera o token JWT definindo o emissor, o sujeito (email) e o tempo de
+	// expiração (2 horas)
 	public String generateToken(User user) {
 		try {
 			Algorithm algorithm = Algorithm.HMAC256(secret);
@@ -32,6 +32,7 @@ public class TokenService {
 		}
 	}
 
+	// Valida a assinatura criptográfica do token usando o algoritmo HMAC256
 	public String validateToken(String token) {
 		try {
 			Algorithm algorithm = Algorithm.HMAC256(secret);

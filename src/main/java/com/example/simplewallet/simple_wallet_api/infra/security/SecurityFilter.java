@@ -11,7 +11,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.example.simplewallet.simple_wallet_api.exceptions.DomainException;
 import com.example.simplewallet.simple_wallet_api.repositories.UserRepository;
-import com.example.simplewallet.simple_wallet_api.services.UserService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -27,6 +26,8 @@ public class SecurityFilter extends OncePerRequestFilter {
 	@Autowired
 	private UserRepository userRepository;
 
+	// Intercepta a requisição, extrai o token do cabeçalho "Bearer" e valida antes
+	// de liberar o acesso
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {

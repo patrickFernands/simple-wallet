@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-
-
 @RestController
 @RequestMapping("/transactions")
 public class TransactionResource {
@@ -27,18 +25,18 @@ public class TransactionResource {
     @Autowired
     private TransactionService transactionService;
 
-
     @PostMapping("/{id}/transfer")
-    public ResponseEntity<TransactionResponseDTO> transfer(@PathVariable Long id, @RequestBody TransactionDTO transaction) {
-        
+    public ResponseEntity<TransactionResponseDTO> transfer(@PathVariable Long id,
+            @RequestBody TransactionDTO transaction) {
+
         Transaction newTransaction = transactionService.transfer(id, transaction.payeeId(), transaction.amount());
 
         User payee = newTransaction.getPayee();
 
-        TransactionResponseDTO response = new TransactionResponseDTO(payee.getName(), newTransaction.getAmount(), newTransaction.getMoment());
-        
+        TransactionResponseDTO response = new TransactionResponseDTO(payee.getName(), newTransaction.getAmount(),
+                newTransaction.getMoment());
+
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-
 
 }
