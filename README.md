@@ -68,5 +68,4 @@ A aplicação sobe por padrão em `http://localhost:8080`, usando um banco H2 em
 
 ## Melhorias futuras
 - Migrar de H2 para um banco relacional persistente (MySQL/PostgreSQL) em produção
-- Testes automatizados de integração para os fluxos de transferência
 - Paginação nos endpoints de listagem
